@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>年龄分类程序</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      padding: 24px;
+    }
+
+    .card {
+      background: #fff;
+      border-radius: 16px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
+      width: 100%;
+      max-width: 480px;
+      padding: 36px 32px;
+    }
+
+    h1 {
+      font-size: 1.5rem;
+      color: #333;
+      text-align: center;
+      margin-bottom: 8px;
+    }
+
+    .subtitle {
+      text-align: center;
+      color: #888;
+      font-size: 0.9rem;
+      margin-bottom: 28px;
+    }
+
+    label {
+      display: block;
+      font-size: 0.95rem;
+      color: #555;
+      margin-bottom: 8px;
+    }
+
+    .input-row {
+      display: flex;
+      gap: 10px;
+    }
+
+    input[type="number"] {
+      flex: 1;
+      padding: 12px 16px;
+      border: 2px solid #e0e0e0;
+      border-radius: 10px;
+      font-size: 1rem;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    input[type="number"]:focus {
+      border-color: #667eea;
+    }
+
+    button {
+      padding: 12px 24px;
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      color: #fff;
+      border: none;
+      border-radius: 10px;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: opacity 0.2s, transform 0.1s;
+      white-space: nowrap;
+    }
+
+    button:hover {
+      opacity: 0.9;
+    }
+
+    button:active {
+      transform: scale(0.97);
+    }
+
+    .error {
+      margin-top: 12px;
+      padding: 10px 14px;
+      background: #fff0f0;
+      color: #d32f2f;
+      border-radius: 8px;
+      font-size: 0.9rem;
+      display: none;
+    }
+
+    .error.show {
+      display: block;
+    }
+
+    .result {
+      margin-top: 24px;
+      display: none;
+    }
+
+    .result.show {
+      display: block;
+      animation: fadeIn 0.4s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(8px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .stage-badge {
+      display: inline-block;
+      padding: 6px 16px;
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      color: #fff;
+      border-radius: 20px;
+      font-size: 1.1rem;
+      font-weight: 600;
+      margin-bottom: 16px;
+    }
+
+    .result-item {
+      padding: 12px 0;
+      border-bottom: 1px solid #f0f0f0;
+    }
+
+    .result-item:last-child {
+      border-bottom: none;
+    }
+
+    .result-label {
+      font-size: 0.85rem;
+      color: #999;
+      margin-bottom: 4px;
+    }
+
+    .result-value {
+      font-size: 1rem;
+      color: #333;
+      line-height: 1.5;
+    }
+
+    .result-value.highlight {
+      color: #667eea;
+      font-weight: 500;
+    }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h1>年龄分类程序</h1>
+    <p class="subtitle">输入您的年龄，查看所属人生阶段</p>
+
+    <label for="age">请输入您的年龄</label>
+    <div class="input-row">
+      <input type="number" id="age" placeholder="例如：15" min="0" max="150">
+      <button id="submit">查看结果</button>
+    </div>
+
+    <div class="error" id="error"></div>
+
+    <div class="result" id="result">
+      <div class="stage-badge" id="stage"></div>
+      <div class="result-item">
+        <div class="result-label">您的年龄</div>
+        <div class="result-value" id="ageDisplay"></div>
+      </div>
+      <div class="result-item">
+        <div class="result-label">温馨提示</div>
+        <div class="result-value" id="description"></div>
+      </div>
+      <div class="result-item">
+        <div class="result-label">特殊提示</div>
+        <div class="result-value highlight" id="special"></div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function 分析年龄(年龄) {
+      let 阶段, 描述;
+
+      if (年龄 <= 2) {
+        阶段 = "婴幼儿";
+        描述 = "正处于快速成长的阶段，需要家人悉心照料。";
+      } else if (年龄 <= 12) {
+        阶段 = "儿童";
+        描述 = "可以尽情玩耍、学习基础知识，培养兴趣爱好。";
+      } else if (年龄 <= 17) {
+        阶段 = "青少年";
+        描述 = "正在经历学业与自我认知的重要时期，加油！";
+      } else if (年龄 <= 35) {
+        阶段 = "青年";
+        描述 = "正是探索事业、建立人际关系的好时光。";
+      } else if (年龄 <= 59) {
+        阶段 = "中年";
+        描述 = "事业与家庭并重，经验与智慧日益丰富。";
+      } else {
+        阶段 = "老年";
+        描述 = "可以享受生活、分享人生阅历，保持健康最重要。";
+      }
+
+      let 特殊提示;
+      if (年龄 < 18) {
+        特殊提示 = "您还未成年，许多活动需要监护人陪同。";
+      } else if (年龄 >= 60) {
+        特殊提示 = "您可能符合部分公共交通、景区的优惠政策。";
+      } else {
+        特殊提示 = "您已具备完全民事行为能力。";
+      }
+
+      return { 阶段, 描述, 特殊提示 };
+    }
+
+    const ageInput = document.getElementById("age");
+    const submitBtn = document.getElementById("submit");
+    const errorEl = document.getElementById("error");
+    const resultEl = document.getElementById("result");
+
+    function 显示结果() {
+      const 输入 = ageInput.value.trim();
+      errorEl.classList.remove("show");
+      resultEl.classList.remove("show");
+
+      if (输入 === "") {
+        errorEl.textContent = "请输入您的年龄。";
+        errorEl.classList.add("show");
+        return;
+      }
+
+      const 年龄 = parseInt(输入, 10);
+
+      if (isNaN(年龄) || 年龄 < 0) {
+        errorEl.textContent = "请输入有效的数字年龄（不能为负数）。";
+        errorEl.classList.add("show");
+        return;
+      }
+
+      const { 阶段, 描述, 特殊提示 } = 分析年龄(年龄);
+
+      document.getElementById("stage").textContent = 阶段;
+      document.getElementById("ageDisplay").textContent = 年龄 + " 岁";
+      document.getElementById("description").textContent = 描述;
+      document.getElementById("special").textContent = 特殊提示;
+      resultEl.classList.add("show");
+    }
+
+    submitBtn.addEventListener("click", 显示结果);
+    ageInput.addEventListener("keydown", function (e) {
+      if (e.key === "Enter") 显示结果();
+    });
+  </script>
+</body>
+</html>
